@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    
+    <title>Chess</title>
+    <link rel="icon" type="image/x-icon" href="https://icons.iconarchive.com/icons/fa-team/fontawesome/256/FontAwesome-Chess-Knight-icon.png">
+    
+</head>
+<body>
+
+    <div class="container">
+        <div id="board-wrapper">
+      
+            <div class="corner"></div>
+            <div class="column-letter">A</div>
+            <div class="column-letter">B</div>
+            <div class="column-letter">C</div>
+            <div class="column-letter">D</div>
+            <div class="column-letter">E</div>
+            <div class="column-letter">F</div>
+            <div class="column-letter">G</div>
+            <div class="column-letter">H</div>
+            <div class="corner"></div>
+           
+            <div class="row-number">8</div>
+            <div class="row-number">8</div>
+            <div class="row-number">7</div>
+            <div class="row-number">7</div>
+            <div class="row-number">6</div>
+            <div class="row-number">6</div>
+            <div class="row-number">5</div>
+            <div class="row-number">5</div>
+            <div class="row-number">4</div>
+            <div class="row-number">4</div>
+            <div class="row-number">3</div>
+            <div class="row-number">3</div>
+            <div class="row-number">2</div>
+            <div class="row-number">2</div>
+            <div class="row-number">1</div>
+            <div class="row-number">1</div>
+    
+            <div id="board"></div>
+            
+            <div class="corner"></div>
+            <div class="column-letter">A</div>
+            <div class="column-letter">B</div>
+            <div class="column-letter">C</div>
+            <div class="column-letter">D</div>
+            <div class="column-letter">E</div>
+            <div class="column-letter">F</div>
+            <div class="column-letter">G</div>
+            <div class="column-letter">H</div>
+            <div class="corner"></div>
+        </div>
+        
+        <div>
+            At turn: <span id="turn-indicator">WHITE</span>
+        </div>
+        <div id="checkmate-indicator"></div>
+        <button id="reset-button" hidden onclick="resetGame()">New game</button>
+        <button style="float: right;" onclick="openHelpDialog()">Help</button>
+    
+        
+    
+    
+        <div id="lobby-panel">
+            <button id="create-online-game">Create new game</button>
+            <button id="join-online-game">Join game</button>
+            <button id="player-color-button" onclick="togglePlayerColor()">WHITE</button>
+            <input type="text" id="game-code" placeholder="Game code">
+        </div>
+    </div>
+
+    <dialog id="upgrade-pawn-dialog">
+
+        <form method="dialog">
+            <button type="submit" value="knight">Knight</button>
+            <button type="submit" value="bishop">Bishop</button>
+            <button type="submit" value="rook">Rook</button>
+            <button type="submit" value="queen">Queen</button>
+        </form>
+
+    </dialog>
+
+    <dialog id="help-dialog">
+        <h4>Welcome to chess game!</h4>
+        <p>
+            This is online chess game which you can play with anyone by connecting to the same "game".<br>
+            First choose you color by toggling "WHITE" / "BLACK" button.
+            Game is created by pressing "Create new game" button which will generatre unique code. 
+            Other player needs to enter same code into "Game code" input and press "Join game" button.<br>
+            If everything is successful you can start playing!<br>
+            For now players need to manualy select their colors.<br>
+            <br>
+            To move figure, click on it and it will be marked as selected. Than click other on the field you wish to move it.
+            If the move is invalid, it will be ignored and figure will become unselected. 
+            <br>
+            <br>
+            If game tab is closed or refreshed, you can always rejoin the game by entering the game code and board will be updated.
+            <br>
+            <br>
+            <i><small>Version 31.12.2023. by Miloš</small></i>
+        </p>
+
+        <button style="float: right;" onclick="closeHelpDialog()">Ok</button>
+    </dialog>
+
+</body>
+
+<script src="ui-elements.js"></script>
+<script src="figures/figure.js"></script>
+<script src="figures/rook.js"></script>
+<script src="figures/bishop.js"></script>
+<script src="figures/knight.js"></script>
+<script src="figures/queen.js"></script>
+<script src="figures/king.js"></script>
+<script src="figures/pawn.js"></script>
+<script src="main.js"></script>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, get, set, ref, onValue  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBruYTIu2JXQw7aAvrmjjJ1WBKw-SIIfmc",
+      authDomain: "chess-1ca1f.firebaseapp.com",
+      databaseURL: "https://chess-1ca1f-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "chess-1ca1f",
+      storageBucket: "chess-1ca1f.appspot.com",
+      messagingSenderId: "274716597766",
+      appId: "1:274716597766:web:b74a07b4408d839847ed87"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    var db = getDatabase();
+    let gameData = {};
+
+    createOnlineGameButton.addEventListener('click', () => createGame());
+    joinOnlineGameButton.addEventListener('click', () => joinGame());
+
+    function createGame() {
+        const code = (Math.random() + '').replace('.', '');
+        console.log(code);
+        gameCodeField.value = code;
+        set(ref(db, 'game/' + code), {start: new Date().getTime()}).then(() => joinGame());
+    }
+
+    function joinGame() {
+        
+        const code = gameCodeField.value;
+        if (!code) {
+            alert("Enter proper game code");
+            return;
+        }
+
+        connected = true;
+        playerColorButton.disabled = true;
+        gameCodeField.disabled = true;
+        createOnlineGameButton.disabled = true;
+        joinOnlineGameButton.disabled = true;
+        console.log(code);
+
+        const dataRef = ref(db, 'game/' + code);
+
+        onValue(dataRef, snapshot => {
+            gameData = snapshot.val();
+            if (!gameData) {
+                alert("Game with code " + code + " not found");
+            }
+            console.log(gameData);
+
+            if (gameData.turnCount > turnCount) {
+                console.log('primeni poziciju');
+                turnCount = gameData.turnCount;
+                turn = gameData.turn;
+                turnIndicator.innerText = turn;
+                applyPosition(gameData.positions);
+            }
+        });
+    }
+
+    export function submitMove() {
+        const code = gameCodeField.value;
+        gameData.positions = figures;
+        gameData.turnCount = turnCount;
+        gameData.turn = turn;
+
+        set(ref(db, 'game/' + code), gameData);
+    }
+
+    window.submitMove = submitMove;
+
+  </script>
+
+
+</html>

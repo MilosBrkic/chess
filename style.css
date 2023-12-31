@@ -1,0 +1,131 @@
+
+.container {
+    width: 840px;
+}
+
+#board-wrapper {
+    width: 840px;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+}
+
+.column-letter-line {
+    grid-area: col;
+}
+
+.row-number-line {
+    grid-area: row;
+}
+
+.corner {
+    width: 20px;
+}
+
+.column-letter {
+    width: 100px;
+    height: 20p;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-number {
+    width: 20px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#board {
+    grid-column: 2 / span 8;
+    grid-row: 2 / span 8;
+
+    border: 1px solid gray;
+    width: 800px;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
+}
+
+.black-perspective {
+    transform: rotate(180deg);
+
+    .column-letter {
+        transform: rotate(180deg);
+    }
+
+    .row-number {
+        transform: rotate(180deg);
+    }
+
+    .figure {
+        transform: rotate(180deg);
+    }
+}
+
+.field {
+    width: 100px;
+    height: 100px;
+    z-index: 1;
+}
+
+.selected-field {
+    background-color: yellow !important;
+}
+
+.figure {
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.white-rook {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Chess_rlt45.svg/1024px-Chess_rlt45.svg.png');
+}
+
+.black-rook {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Chess_rdt45.svg/1024px-Chess_rdt45.svg.png');
+}
+
+.white-bishop {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Chess_blt45.svg/1024px-Chess_blt45.svg.png');
+}
+
+.black-bishop {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Chess_bdt45.svg/1024px-Chess_bdt45.svg.png');
+}
+
+.white-knight {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Chess_nlt45.svg/1024px-Chess_nlt45.svg.png');
+}
+
+.black-knight {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Chess_ndt45.svg/1024px-Chess_ndt45.svg.png');
+}
+
+.white-queen {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Chess_qlt45.svg/1024px-Chess_qlt45.svg.png');
+}
+
+.black-queen {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Chess_qdt45.svg/1024px-Chess_qdt45.svg.png');
+}
+
+.white-king {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Chess_klt45.svg/1024px-Chess_klt45.svg.png');
+}
+
+.black-king {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Chess_kdt45.svg/1024px-Chess_kdt45.svg.png');
+}
+
+.white-pawn {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Chess_plt45.svg/1024px-Chess_plt45.svg.png');
+}
+
+.black-pawn {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Chess_pdt45.svg/1024px-Chess_pdt45.svg.png');
+}
+
+#help-dialog {
+    width: 600px;
+}
